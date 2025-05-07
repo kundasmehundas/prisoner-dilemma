@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>משחק דילמת האסיר</title>
+    <style>
+        body { font-family: Arial, sans-serif; direction: rtl; }
+        .button { padding: 10px 20px; margin: 10px; }
+    </style>
+</head>
+<body>
+    <h1>משחק דילמת האסיר</h1>
+    <p>סיפור הדילמה: אתה וחברך על אי בודד. כל אחד מכם צריך לבחור: לשתף פעולה או לבגוד.</p>
+    <p>אם שניכם משתפים פעולה – כל אחד מקבל 3 נקודות.</p>
+    <p>אם אחד בוגד והשני משתף – הבוגד מקבל 5 והשני 0.</p>
+    <p>אם שניכם בוגדים – כל אחד מקבל 1 נקודה.</p>
+
+    <input type="text" id="name" placeholder="הכנס את שמך כאן">
+    <button class="button" onclick="choose('share')">לשתף פעולה</button>
+    <button class="button" onclick="choose('betray')">לבגוד</button>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyAcqArgb2kGFUb4DTfM5idHrjjC8gWs1Iw",
+            authDomain: "prisoner-dilemma-63ba1.firebaseapp.com",
+            databaseURL: "https://prisoner-dilemma-63ba1-default-rtdb.firebaseio.com",
+            projectId: "prisoner-dilemma-63ba1",
+            storageBucket: "prisoner-dilemma-63ba1.appspot.com",
+            messagingSenderId: "176474090457",
+            appId: "1:176474090457:web:27d9b6ab72b45fe636c7c8",
+            measurementId: "G-KVYGBZR6DR"
+        };
+
+        const app = firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        function choose(choice) {
+            const playerName = document.getElementById("name").value;
+
+            if (!playerName) {
+                alert("אנא הזן את שמך");
+                return;
+            }
+
+            const newChoiceRef = database.ref('players').push();
+            newChoiceRef.set({
+                name: playerName,
+                choice: choice,
+                score: (choice === 'share' ? 3 : (choice === 'betray' ? 0 : 1))
+            });
+
+            alert(`בחרת: ${choice}`);
+        }
+    </script>
+</body>
+</html>
