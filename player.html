@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>משחק דילמת האסיר</title>
+    <style>
+        body { font-family: Arial, sans-serif; direction: rtl; }
+        .button { padding: 10px 20px; margin: 10px; }
+    </style>
+</head>
+<body>
+    <h1>משחק דילמת האסיר</h1>
+    <p>סיפור הדילמה: אתה וחברך על אי בודד. כל אחד מכם צריך לבחור: לשתף פעולה או לבגוד.</p>
+    <p>אם שניכם משתפים פעולה – כל אחד מקבל 3 נקודות.</p>
+    <p>אם אחד בוגד והשני משתף – הבוגד מקבל 5 והשני 0.</p>
+    <p>אם שניכם בוגדים – כל אחד מקבל 1 נקודה.</p>
+
+    <button class="button" onclick="choose('share')">לשתף פעולה</button>
+    <button class="button" onclick="choose('betray')">לבגוד</button>
+
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
+    <script>
+        var firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            databaseURL: "YOUR_DATABASE_URL",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_SENDER_ID",
+            appId: "YOUR_APP_ID",
+        };
+        firebase.initializeApp(firebaseConfig);
+        var database = firebase.database();
+
+        function choose(choice) {
+            alert('בחרת: ' + choice);
+            sendChoice("player1", choice);  // אפשר לשנות את ה-ID של השחקן
+        }
+
+        function sendChoice(playerId, choice) {
+            database.ref('choices/' + playerId).set({
+                choice: choice
+            });
+        }
+    </script>
+</body>
+</html>
