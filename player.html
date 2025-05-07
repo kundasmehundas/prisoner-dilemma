@@ -1,47 +1,11 @@
 <!DOCTYPE html>
 <html lang="he">
 <head>
-    <script type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
-
-  // Your web app's Firebase configuration
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-  const firebaseConfig = {
-    apiKey: "AIzaSyAcqArgb2kGFUb4DTfM5idHrjjC8gWs1Iw",
-    authDomain: "prisoner-dilemma-63ba1.firebaseapp.com",
-    databaseURL: "https://prisoner-dilemma-63ba1-default-rtdb.firebaseio.com",
-    projectId: "prisoner-dilemma-63ba1",
-    storageBucket: "prisoner-dilemma-63ba1.firebasestorage.app",
-    messagingSenderId: "176474090457",
-    appId: "1:176474090457:web:27d9b6ab72b45fe636c7c8",
-    measurementId: "G-KVYGBZR6DR"
-  };
-
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>משחק דילמת האסיר</title>
     <style>
         body { font-family: Arial, sans-serif; direction: rtl; }
-        .button { padding: 10px 20px; margin: 10px; }
-    </style>
-</head>
-<!DOCTYPE html>
-<html lang="he">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>משחק דילמת האסיר</title>
-    <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-database.js"></script>
-    <style>
         .button { padding: 10px 20px; margin: 10px; }
     </style>
 </head>
@@ -52,50 +16,32 @@
     <p>אם אחד בוגד והשני משתף – הבוגד מקבל 5 והשני 0.</p>
     <p>אם שניכם בוגדים – כל אחד מקבל 1 נקודה.</p>
 
-    <!-- שדה להזנת שם תלמיד -->
-    <label for="playerName">הזן את שמך:</label>
-    <input type="text" id="playerName" name="playerName" placeholder="שם תלמיד" required>
-
-    <!-- כפתור הבחירה -->
-    <button class="button" onclick="choose('cooperate')">לשתף פעולה</button>
+    <button class="button" onclick="choose('share')">לשתף פעולה</button>
     <button class="button" onclick="choose('betray')">לבגוד</button>
 
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
     <script>
-        const firebaseConfig = {
-            apiKey: "your-api-key",
-            authDomain: "your-auth-domain",
-            databaseURL: "https://your-database-name.firebaseio.com",
-            projectId: "your-project-id",
-            storageBucket: "your-storage-bucket",
-            messagingSenderId: "your-messaging-sender-id",
-            appId: "your-app-id"
+        var firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            databaseURL: "YOUR_DATABASE_URL",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_SENDER_ID",
+            appId: "YOUR_APP_ID",
         };
         firebase.initializeApp(firebaseConfig);
+        var database = firebase.database();
 
-        const db = firebase.database();
-
-        // פונקציה לשלוח את הבחירה ונתוני התלמיד ל-Firebase
         function choose(choice) {
-            const playerName = document.getElementById('playerName').value;
+            alert('בחרת: ' + choice);
+            sendChoice("player1", choice);  // אפשר לשנות את ה-ID של השחקן
+        }
 
-            // בודק אם השם הוזן
-            if (!playerName) {
-                alert('אנא הזן את שמך לפני ביצוע הבחירה!');
-                return;
-            }
-
-            const playerData = {
-                name: playerName,
+        function sendChoice(playerId, choice) {
+            database.ref('choices/' + playerId).set({
                 choice: choice
-            };
-
-            // שולח את נתוני השחקן ל-Firebase
-            db.ref('players/').push(playerData)
-            .then(() => {
-                alert('הבחירה שלך נשלחה!');
-            })
-            .catch((error) => {
-                console.log('Error sending choice: ', error);
             });
         }
     </script>
