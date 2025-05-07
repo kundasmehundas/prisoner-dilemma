@@ -49,8 +49,8 @@
                 return;
             }
 
-            // יצירת מזהה ייחודי לתלמיד (playerId)
-            const playerId = 'player_1'; // ניתן לשדרג את זה לשם ייחודי לכל תלמיד
+            // יצירת מזהה ייחודי לתלמיד (playerId) - ניתן לשדרג עם מזהה ייחודי לכל תלמיד
+            const playerId = 'player_' + Date.now(); // יוצרת מזהה ייחודי לכל תלמיד (timestamp)
 
             // עדכון Firebase עם השם, הבחירה והניקוד
             const playerRef = database.ref('players/' + playerId); // הנתיב ב-Firebase
