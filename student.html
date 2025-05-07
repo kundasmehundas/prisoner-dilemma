@@ -14,12 +14,13 @@
     <p>סיפור הדילמה: אתה וחברך על אי בודד. כל אחד מכם צריך לבחור: לשתף פעולה או לבגוד.</p>
     <p>אם שניכם משתפים פעולה – כל אחד מקבל 3 נקודות.</p>
     <p>אם אחד בוגד והשני משתף – הבוגד מקבל 5 והשני 0.</p>
-    <p>אם שניכם בוגדים – כל אחד מקבל 1 נקודה.</p>
+    <p>אם שניהם בוגדים – כל אחד מקבל 1 נקודה.</p>
 
     <input type="text" id="name" placeholder="הכנס את שמך כאן">
     <button class="button" onclick="choose('share')">לשתף פעולה</button>
     <button class="button" onclick="choose('betray')">לבגוד</button>
 
+    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
     <script>
@@ -45,14 +46,21 @@
                 return;
             }
 
+            // Save the player's choice and score to Firebase
             const newChoiceRef = database.ref('players').push();
             newChoiceRef.set({
                 name: playerName,
                 choice: choice,
                 score: (choice === 'share' ? 3 : (choice === 'betray' ? 0 : 1))
+            })
+            .then(() => {
+                alert(`בחרת: ${choice}`);
+                console.log("הנתונים נשמרו ב-Firebase");
+            })
+            .catch((error) => {
+                alert("אירעה שגיאה בשמירת הנתונים");
+                console.error("Error:", error);
             });
-
-            alert(`בחרת: ${choice}`);
         }
     </script>
 </body>
