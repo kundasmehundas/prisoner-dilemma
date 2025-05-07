@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>משחק דילמת האסיר</title>
+    <style>
+        body { font-family: Arial, sans-serif; direction: rtl; }
+        table { width: 100%; border-collapse: collapse; }
+        table, th, td { border: 1px solid black; }
+        th, td { padding: 8px; text-align: center; }
+    </style>
+</head>
+<body>
+    <h1>משחק דילמת האסיר</h1>
+    <h2>בחר דילמה</h2>
+    <select id="dilemmaSelect">
+        <option value="default">דילמת האסיר הקלאסית</option>
+        <option value="custom">הזן דילמה מותאמת אישית</option>
+    </select>
+    <button onclick="startGame()">התחל משחק</button>
+
+    <h3>טבלת תוצאות:</h3>
+    <table id="resultsTable">
+        <thead>
+            <tr>
+                <th>זוג</th>
+                <th>שם שחקן 1</th>
+                <th>שם שחקן 2</th>
+                <th>בחירת 1</th>
+                <th>בחירת 2</th>
+                <th>ניקוד 1</th>
+                <th>ניקוד 2</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- תוצאות יוצגו כאן -->
+        </tbody>
+    </table>
+
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
+    <script>
+        var firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            databaseURL: "YOUR_DATABASE_URL",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_SENDER_ID",
+            appId: "YOUR_APP_ID",
+        };
+        firebase.initializeApp(firebaseConfig);
+        var database = firebase.database();
+
+        function startGame() {
+            alert('המשחק התחיל!');
+            // כאן נוסיף קוד להפעיל את המשחק (צד שרת, תקשורת בזמן אמת)
+        }
+
+        function updateResults(data) {
+            let table = document.getElementById("resultsTable").getElementsByTagName('tbody')[0];
+            table.innerHTML = ""; // איפוס הטבלה
+            Object.keys(data).forEach(function(key) {
+                let row = table.insertRow();
+                row.insertCell(0).innerText = key;
+                row.insertCell(1).innerText = data[key].choice;
+                row.insertCell(2).innerText = getPoints(data[key].choice);
+            });
+        }
+
+        function getPoints(choice) {
+            return choice === "share" ? 3 : 1;
+        }
+
+        database.ref('choices').on('value', function(snapshot) {
+            var data = snapshot.val();
+            updateResults(data);
+        });
+
+        function sendChoice(playerId, choice) {
+            database.ref('choices/' + playerId).set({
+                choice: choice
+            });
+        }
+    </script>
+</body>
+</html>
